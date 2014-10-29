@@ -59,7 +59,8 @@ for ( i in 2:900 ) {
   }
   else week <- date_week_num[ i-1, 2] + 1
   
-  date_week_num <- rbind(date_week_num, data.frame(date = date2, week = week, year = format(date1, "%Y")))
+  date_week_num <- rbind(date_week_num, data.frame(Date = date2, Week = week, Year = format(date1, "%Y")))
 }
 
 dbWriteTable(conn = db, name = "DATE_WEEK", value = date_week_num, row.names = FALSE)
+dbDisconnect(db)
