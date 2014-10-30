@@ -22,19 +22,51 @@ bases_peak_distance <- function(year = 10, plot = FALSE) {
         
         remove_rows <- integer(0)
         for (i in 1:nrow(a)) {
-            # index <- which(location_data_frame$zip5 == a[i, 1])
+            index <- which(location_data_frame$zip5 == a[i, 1])
             index_zip <- which(zip$Zipcode == a[i, 1])
-            # if (length(index) != 0) { lat_lon <- location_data_frame[index, c(3, 2)] state <- map.where('state', y = lat_lon[1], x = lat_lon[2]) if
-            # (is.na(state)) { remove_rows <- append(remove_rows, i) } else { state <- gsub(':main', '', state) state <- gsub(':south', '', state)
-            # state_name <- state.abb[grep(state, state.name, ignore.case = TRUE)] length(state_name) <- 1 a[i, c(3, 4)] <- lon_lat a[i, 5] <-
-            # state_name } }
-            if (is.element(zip[index_zip, 2], c("HI", "AK", "AE", "AP"))) {
-                remove_rows <- append(remove_rows, i)
-            } else if (length(index_zip) != 0) {
-                a[i, c(3, 4, 5)] <- c(zip[index_zip, c(3, 4, 2)])
+            second_try <- FALSE
+            if (length(index) != 0) { 
+              lat_lon <- location_data_frame[index, c(3, 2)] 
+              state <- map.where('state', y = lat_lon[1], x = lat_lon[2]) 
+              
+              if ( is.na(state) && length(index_zip) == 0) { 
+                remove_rows <- append(remove_rows, i) 
+                } 
+              
+              else if ( is.na(state) && length(index_zip) != 0) { 
+                second_try <- TRUE
+              }
+              
+              else { 
+                if ( grepl(":", state) ) {
+                  state <- substring(state, 1, gregexpr(":", state)[[1]][1] - 1)
+                }
+                
+                state_name <- state.abb[grep(state, state.name, ignore.case = TRUE)] 
+                
+                if ( state == "district of columbia") {
+                  state_name <- "DC"
+                }
+                length(state_name) <- 1 
+                a[i, c(3, 4)] <- lat_lon 
+                a[i, 5] <-state_name 
+              } 
             }
             
-            # else if ( length(index_zip) == 0 && length(index) == 0) { remove_rows <- append(remove_rows, i) }
+            else if ((length(index) == 0 && length(index_zip) != 0) | second_try ) {
+              
+                if (is.element(zip[index_zip, 2], c("HI", "AK", "AE", "AP"))) {
+                    remove_rows <- append(remove_rows, i)
+                } 
+            
+                else {
+                    a[i, c(3, 4, 5)] <- c(zip[index_zip, c(3, 4, 2)])
+                }
+            }
+            
+            else if ( length(index_zip) == 0 && length(index) == 0) { 
+              remove_rows <- append(remove_rows, i) 
+            }
         }
         
         if (length(remove_rows) != 0) {

@@ -6,9 +6,9 @@ source("~/predictiveScience/R_Functions/google_flu_trends/google_peak_school.R")
 
 red = FALSE
 
-distance <- google_peak_distance()
-sh <- google_peak_sh()
-school <- google_peak_school()
+distance <- google_peak_distance(5)
+sh <- google_peak_sh(5)
+school <- google_peak_school(5)
 
 mult_regression <- data.frame(name = distance$name, peak_date = distance$peak_date, distance_black = distance$black_distance, 
         distance_red = distance$red_distance, sh = NA, school = as.Date(NA), color = distance$color)
@@ -139,7 +139,7 @@ cat("Variable Inflation Factors of Peak ~ School Start Date + Black_Distance + S
 cat("\n")
 print(vif(model))
 
-cat("Correlation Matrix")
+cat("\nCorrelation Matrix\n")
 print(cor(data.frame(peak_date = as.numeric(mult_regression$peak_date), 
                      distance_black = mult_regression$distance_black, 
                      sh = mult_regression$sh, 

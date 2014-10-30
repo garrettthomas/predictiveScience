@@ -6,7 +6,7 @@ find_peak_week_bases <- function(which_years = c(0:10)) {
     
     for (j in which_years) {
         a = 37 + 52 * j
-        b = 89 + 52 * j
+        b = 80 + 52 * j
         
         # Get highest range of that year of all regions
         

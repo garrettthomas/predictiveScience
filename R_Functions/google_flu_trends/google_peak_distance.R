@@ -50,7 +50,7 @@ google_peak_distance <- function(year = 6, plot = FALSE) {
     red_center[which(b$name == r_name)] <- 1
     
     answer <- data.frame(name = b$name, peak_date = b$peak_date, black_center = black_center, black_distance = distance_data_frame$distance, 
-        red_center = red_center, red_distance = red_data_frame$distance, color = b$color)
+        red_center = red_center, red_distance = red_data_frame$distance, color = b$color, b$lat, b$long)
     if (plot) {
         ########### plot which maximizes black correlation
         
