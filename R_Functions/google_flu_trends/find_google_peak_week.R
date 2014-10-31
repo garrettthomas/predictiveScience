@@ -9,7 +9,8 @@ find_google_peak_week <- function(which_years = c(0:9)) {
         for (k in 2:98) {
             index <- which.max(cities[a:b, k])
             if (length(index) == 0) 
-                data[which(which_years == j), k - 1] <- NA else data[which(which_years == j), k - 1] <- as.character(cities$Date[a - 1 + index])
+                data[which(which_years == j), k - 1] <- NA 
+            else data[which(which_years == j), k - 1] <- as.character(cities$Date[a - 1 + index])
         }
         
         
