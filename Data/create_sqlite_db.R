@@ -124,17 +124,17 @@ names(CDC_CENSUS_Regional_Data) <- gsub("\\.", "_", names(CDC_CENSUS_Regional_Da
 CDC_CENSUS_LIST <- list()
 
 for ( i in 5:ncol(CDC_CENSUS_Regional_Data)) {
-  CDC_CENSUS_LIST[[i-4]] <- data.frame(Year = CDC_CENSUS_Regional_Data$YEAR[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 9), by = 10)], 
-                                    WEEK = CDC_CENSUS_Regional_Data$WEEK[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 9), by = 10)],
-                                    NEW_ENGLAND = CDC_CENSUS_Regional_Data[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 9), by = 10), i],
-                                    MID_ATLANTIC = CDC_CENSUS_Regional_Data[seq(2, (nrow(CDC_CENSUS_Regional_Data) - 8), by = 10), i],
-                                    EAST_NORTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(3, (nrow(CDC_CENSUS_Regional_Data) - 7), by = 10), i],
-                                    WEST_NORTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(4, (nrow(CDC_CENSUS_Regional_Data) - 6), by = 10), i],
-                                    SOUTH_ATLANTIC = CDC_CENSUS_Regional_Data[seq(5, (nrow(CDC_CENSUS_Regional_Data) - 5), by = 10), i],
-                                    EAST_SOUTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(6, (nrow(CDC_CENSUS_Regional_Data) - 4), by = 10), i],
-                                    WEST_SOUTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(7, (nrow(CDC_CENSUS_Regional_Data) - 3), by = 10), i],
-                                    MOUTAIN = CDC_CENSUS_Regional_Data[seq(8, (nrow(CDC_CENSUS_Regional_Data) - 2), by = 10), i],
-                                    PACIFIC = CDC_CENSUS_Regional_Data[seq(9, (nrow(CDC_CENSUS_Regional_Data) - 1), by = 10), i])
+  CDC_CENSUS_LIST[[i-4]] <- data.frame(Year = CDC_CENSUS_Regional_Data$YEAR[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 8), by = 9)], 
+                                    WEEK = CDC_CENSUS_Regional_Data$WEEK[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 8), by = 9)],
+                                    NEW_ENGLAND = CDC_CENSUS_Regional_Data[seq(1, (nrow(CDC_CENSUS_Regional_Data) - 8), by = 9), i],
+                                    MID_ATLANTIC = CDC_CENSUS_Regional_Data[seq(2, (nrow(CDC_CENSUS_Regional_Data) - 7), by = 9), i],
+                                    EAST_NORTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(3, (nrow(CDC_CENSUS_Regional_Data) - 6), by = 9), i],
+                                    WEST_NORTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(4, (nrow(CDC_CENSUS_Regional_Data) - 5), by = 9), i],
+                                    SOUTH_ATLANTIC = CDC_CENSUS_Regional_Data[seq(5, (nrow(CDC_CENSUS_Regional_Data) - 4), by = 9), i],
+                                    EAST_SOUTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(6, (nrow(CDC_CENSUS_Regional_Data) - 3), by = 9), i],
+                                    WEST_SOUTH_CENTRAL = CDC_CENSUS_Regional_Data[seq(7, (nrow(CDC_CENSUS_Regional_Data) - 2), by = 9), i],
+                                    MOUTAIN = CDC_CENSUS_Regional_Data[seq(8, (nrow(CDC_CENSUS_Regional_Data) - 1), by = 9), i],
+                                    PACIFIC = CDC_CENSUS_Regional_Data[seq(9, nrow(CDC_CENSUS_Regional_Data), by = 9), i])
 }
 
 for ( i in 1:length(CDC_CENSUS_LIST) ) {
@@ -218,17 +218,17 @@ names(WHO_CENSUS_Regional_Data) <- gsub("\\.", "_", names(WHO_CENSUS_Regional_Da
 WHO_CENSUS_LIST <- list()
 
 for ( i in 5:ncol(WHO_CENSUS_Regional_Data)) {
-  WHO_CENSUS_LIST[[i-4]] <- data.frame(Year = WHO_CENSUS_Regional_Data$YEAR[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 9), by = 10)], 
-                                       WEEK = WHO_CENSUS_Regional_Data$WEEK[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 9), by = 10)],
-                                       NEW_ENGLAND = WHO_CENSUS_Regional_Data[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 9), by = 10), i],
-                                       MID_ATLANTIC = WHO_CENSUS_Regional_Data[seq(2, (nrow(WHO_CENSUS_Regional_Data) - 8), by = 10), i],
-                                       EAST_NORTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(3, (nrow(WHO_CENSUS_Regional_Data) - 7), by = 10), i],
-                                       WEST_NORTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(4, (nrow(WHO_CENSUS_Regional_Data) - 6), by = 10), i],
-                                       SOUTH_ATLANTIC = WHO_CENSUS_Regional_Data[seq(5, (nrow(WHO_CENSUS_Regional_Data) - 5), by = 10), i],
-                                       EAST_SOUTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(6, (nrow(WHO_CENSUS_Regional_Data) - 4), by = 10), i],
-                                       WEST_SOUTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(7, (nrow(WHO_CENSUS_Regional_Data) - 3), by = 10), i],
-                                       MOUTAIN = WHO_CENSUS_Regional_Data[seq(8, (nrow(WHO_CENSUS_Regional_Data) - 2), by = 10), i],
-                                       PACIFIC = WHO_CENSUS_Regional_Data[seq(9, (nrow(WHO_CENSUS_Regional_Data) - 1), by = 10), i])
+  WHO_CENSUS_LIST[[i-4]] <- data.frame(Year = WHO_CENSUS_Regional_Data$YEAR[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 8), by = 9)], 
+                                       WEEK = WHO_CENSUS_Regional_Data$WEEK[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 8), by = 9)],
+                                       NEW_ENGLAND = WHO_CENSUS_Regional_Data[seq(1, (nrow(WHO_CENSUS_Regional_Data) - 8), by = 9), i],
+                                       MID_ATLANTIC = WHO_CENSUS_Regional_Data[seq(2, (nrow(WHO_CENSUS_Regional_Data) - 7), by = 9), i],
+                                       EAST_NORTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(3, (nrow(WHO_CENSUS_Regional_Data) - 6), by = 9), i],
+                                       WEST_NORTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(4, (nrow(WHO_CENSUS_Regional_Data) - 5), by = 9), i],
+                                       SOUTH_ATLANTIC = WHO_CENSUS_Regional_Data[seq(5, (nrow(WHO_CENSUS_Regional_Data) - 4), by = 9), i],
+                                       EAST_SOUTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(6, (nrow(WHO_CENSUS_Regional_Data) - 3), by = 9), i],
+                                       WEST_SOUTH_CENTRAL = WHO_CENSUS_Regional_Data[seq(7, (nrow(WHO_CENSUS_Regional_Data) - 2), by = 9), i],
+                                       MOUTAIN = WHO_CENSUS_Regional_Data[seq(8, (nrow(WHO_CENSUS_Regional_Data) - 1), by = 9), i],
+                                       PACIFIC = WHO_CENSUS_Regional_Data[seq(9, nrow(WHO_CENSUS_Regional_Data), by = 9), i])
 }
 
 for ( i in 1:length(WHO_CENSUS_LIST) ) {
