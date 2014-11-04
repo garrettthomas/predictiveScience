@@ -107,8 +107,8 @@ google_peak_sh <- function(year = 6, plot = FALSE) {
         abline(lm(formula = sh ~ peak_date, data = b[which(b$color == "red"), ]), col = "red")
         corr_black <- rcorr(x = as.numeric(as.Date(b$peak_date, "%m/%d/%y")), y = b$sh, type = "pearson")
         corr_red <- rcorr(x = as.numeric(as.Date(b$peak_date[which(b$color == "red")], "%m/%d/%y")), y = b$sh[which(b$color == "red")], type = "pearson")
-        title <- paste("Peak Date of", years[year], "-", years[year + 1], "Against Specific Humidity\nBlack:", round(corr_black$r[2], 2), ", p ~", 
-            signif(corr_black$P[2], 1), "      Red:", round(corr_red$r[2], 2), ", p ~", signif(corr_red$P[2], 1))
+        title <- paste("Peak Date of", years[year], "-", years[year + 1], "Against Specific Humidity\nBlack:", round(corr_black$r[2], 2), ", p ~", signif(corr_black$P[2], 
+            1), "      Red:", round(corr_red$r[2], 2), ", p ~", signif(corr_red$P[2], 1))
         title(main = title)
     }
     return(answer)

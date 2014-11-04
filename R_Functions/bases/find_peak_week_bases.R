@@ -14,8 +14,7 @@ find_peak_week_bases <- function(which_years = c(0:10), min = 11) {
             if (length(which(bases[a:b, k] > min)) != 0) {
                 index <- which.max(bases[a:b, k])
                 if (length(index) == 0) 
-                  data[which(which_years == j), k - 3] <- NA 
-                else data[which(which_years == j), k - 3] <- as.character(bases$date[a - 1 + index])
+                  data[which(which_years == j), k - 3] <- NA else data[which(which_years == j), k - 3] <- as.character(bases$date[a - 1 + index])
             }
         }
     }

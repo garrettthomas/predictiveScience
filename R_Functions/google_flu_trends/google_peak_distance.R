@@ -27,8 +27,7 @@ google_peak_distance <- function(year = 6, plot = FALSE) {
         q <- b[i, c(5, 4)]
         temp_data_frame <- data.frame(distance = NA, peak_date = as.Date(b$peak_date))
         for (j in 1:nrow(b)) {
-            temp_data_frame[j, 1] <- gdist(lon.1 = as.numeric(b[j, 5]), lat.1 = as.numeric(b[j, 4]), lon.2 = as.numeric(q[1]), lat.2 = as.numeric(q[2]), 
-                units = "km")
+            temp_data_frame[j, 1] <- gdist(lon.1 = as.numeric(b[j, 5]), lat.1 = as.numeric(b[j, 4]), lon.2 = as.numeric(q[1]), lat.2 = as.numeric(q[2]), units = "km")
         }
         cor1 <- cor(as.numeric(temp_data_frame[, 2]), temp_data_frame[, 1], method = "pearson")
         cor2 <- cor(as.numeric(temp_data_frame[which(b$color == "red"), 2]), temp_data_frame[which(b$color == "red"), 1], method = "pearson")
@@ -49,8 +48,8 @@ google_peak_distance <- function(year = 6, plot = FALSE) {
     red_center <- rep(0, nrow(b))
     red_center[which(b$name == r_name)] <- 1
     
-    answer <- data.frame(name = b$name, peak_date = b$peak_date, black_center = black_center, black_distance = distance_data_frame$distance, 
-        red_center = red_center, red_distance = red_data_frame$distance, color = b$color, b$lat, b$long, stringsAsFactors = FALSE)
+    answer <- data.frame(name = b$name, peak_date = b$peak_date, black_center = black_center, black_distance = distance_data_frame$distance, red_center = red_center, 
+        red_distance = red_data_frame$distance, color = b$color, b$lat, b$long, stringsAsFactors = FALSE)
     if (plot) {
         ########### plot which maximizes black correlation
         
@@ -64,11 +63,9 @@ google_peak_distance <- function(year = 6, plot = FALSE) {
         y_label <- paste("Distance from", b_name, "(km)")
         corr_bb <- rcorr(as.numeric(distance_data_frame[, 2]), distance_data_frame[, 1], type = "pearson")
         corr_br <- rcorr(as.numeric(distance_data_frame[which(b$color == "red"), 2]), distance_data_frame[which(b$color == "red"), 1], type = "pearson")
-        title <- paste("Peak Date of", google_years[year], "Influenza Wave Against Distance from", b_name, "\nBlack:", round(corr_bb$r[2], 2), 
-            ", p ~", signif(corr_bb$P[2], 1), ", speed ~", speed_black, "km/hr  Red:", round(corr_br$r[2], 2), ", p ~", signif(corr_br$P[2], 
-                1), ", speed ~", speed_red, "km/hr")
-        plot(x = as.Date(distance_data_frame[, 2]), y = distance_data_frame[, 1], xlab = "Date of Peak Week", ylab = y_label, col = b$color, 
-            pch = 20)
+        title <- paste("Peak Date of", google_years[year], "Influenza Wave Against Distance from", b_name, "\nBlack:", round(corr_bb$r[2], 2), ", p ~", signif(corr_bb$P[2], 
+            1), ", speed ~", speed_black, "km/hr  Red:", round(corr_br$r[2], 2), ", p ~", signif(corr_br$P[2], 1), ", speed ~", speed_red, "km/hr")
+        plot(x = as.Date(distance_data_frame[, 2]), y = distance_data_frame[, 1], xlab = "Date of Peak Week", ylab = y_label, col = b$color, pch = 20)
         title(main = title, cex = 0.7)
         abline(all_lm)
         abline(east_lm, col = "red")
@@ -90,9 +87,8 @@ google_peak_distance <- function(year = 6, plot = FALSE) {
         cor_red_black <- cor(as.numeric(red_data_frame[, 2]), red_data_frame[, 1], method = "pearson")
         corr_rb <- rcorr(as.numeric(red_data_frame[, 2]), red_data_frame[, 1], type = "pearson")
         corr_rr <- rcorr(as.numeric(red_data_frame[which(b$color == "red"), 2]), red_data_frame[which(b$color == "red"), 1], type = "pearson")
-        title <- paste("Peak Date of", google_years[year], "Influenza Wave Against Distance from", r_name, "\nBlack:", round(corr_rb$r[2], 2), 
-            ", p ~", signif(corr_rb$P[2], 1), ", speed ~", speed_rb, "km/hr  Red:", round(corr_rr$r[2], 2), ", p ~", signif(corr_rr$P[2], 1), 
-            ", speed ~", speed_rr, "km/hr")
+        title <- paste("Peak Date of", google_years[year], "Influenza Wave Against Distance from", r_name, "\nBlack:", round(corr_rb$r[2], 2), ", p ~", signif(corr_rb$P[2], 
+            1), ", speed ~", speed_rb, "km/hr  Red:", round(corr_rr$r[2], 2), ", p ~", signif(corr_rr$P[2], 1), ", speed ~", speed_rr, "km/hr")
         plot(x = as.Date(red_data_frame[, 2]), y = red_data_frame[, 1], xlab = "Date of Peak Week", ylab = y_label, col = b$color, pch = 20)
         
         title(main = title, cex = 0.7)

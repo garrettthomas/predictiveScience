@@ -29,15 +29,14 @@ google_peak_school <- function(year = 6, plot = FALSE) {
     
     if (plot) {
         par(pty = "s")
-        plot(y = peak_school$peak_date, x = peak_school$school_start, ylab = "Date of Peak Week", xlab = "School Start Date", col = peak_school$color, 
-            pch = 20)
+        plot(y = peak_school$peak_date, x = peak_school$school_start, ylab = "Date of Peak Week", xlab = "School Start Date", col = peak_school$color, pch = 20)
         abline(lm(formula = peak_date ~ school_start, data = peak_school))
         abline(lm(formula = peak_date ~ school_start, data = peak_school[which(peak_school$color == "red"), ]), col = "red")
         corr_black <- rcorr(x = as.numeric(peak_school$school_start), y = as.numeric(peak_school$peak_date), type = "pearson")
         corr_red <- rcorr(x = as.numeric(peak_school$school_start[which(peak_school$color == "red")]), y = as.numeric(peak_school$peak_date[which(peak_school$color == 
             "red")]), type = "pearson")
-        title <- paste("Peak Date of", google_years[year], "Against School Start Date\nBlack:", round(corr_black$r[2], 2), ", p ~", signif(corr_black$P[2], 
-            1), "      Red:", round(corr_red$r[2], 2), ", p ~", signif(corr_red$P[2], 1))
+        title <- paste("Peak Date of", google_years[year], "Against School Start Date\nBlack:", round(corr_black$r[2], 2), ", p ~", signif(corr_black$P[2], 1), "      Red:", 
+            round(corr_red$r[2], 2), ", p ~", signif(corr_red$P[2], 1))
         title(main = title)
     }
     

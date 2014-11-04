@@ -9,16 +9,16 @@ distance <- bases_peak_distance()
 sh <- bases_peak_sh()
 school <- bases_peak_school()
 
-mult_regression <- data.frame(zip = distance$zip, peak_date = distance$peak, distance_black = distance$black_dist, 
-                              distance_red = distance$red_dist, sh = NA, school = as.Date(NA), color = distance$color)
+mult_regression <- data.frame(zip = distance$zip, peak_date = distance$peak, distance_black = distance$black_dist, distance_red = distance$red_dist, sh = NA, school = as.Date(NA), 
+    color = distance$color)
 
 for (i in 1:nrow(mult_regression)) {
-  
-  sh_index <- which(sh$zip == mult_regression$zip[i])
-  mult_regression$sh[i] <- sh$sh[sh_index]
-  
-  school_index <- which(school$zip == mult_regression$zip[i])
-  mult_regression$school[i] <- school$school_start[school_index]
+    
+    sh_index <- which(sh$zip == mult_regression$zip[i])
+    mult_regression$sh[i] <- sh$sh[sh_index]
+    
+    school_index <- which(school$zip == mult_regression$zip[i])
+    mult_regression$school[i] <- school$school_start[school_index]
 }
 
 model_Bdistance <- lm(as.numeric(peak_date) ~ distance_black, data = mult_regression)
@@ -31,7 +31,7 @@ model_school_Bdistance <- lm(as.numeric(peak_date) ~ as.numeric(school) + distan
 
 
 model <- lm(as.numeric(peak_date) ~ distance_black + as.numeric(school) + sh, data = mult_regression)
-Rmodel <- lm(as.numeric(peak_date) ~ distance_red + as.numeric(school) + sh, data = mult_regression[which(mult_regression$color=="red"),])
+Rmodel <- lm(as.numeric(peak_date) ~ distance_red + as.numeric(school) + sh, data = mult_regression[which(mult_regression$color == "red"), ])
 
 cat("\n########################################################################### \n\n")
 cat("MPZ DATA: HIGHLIGHTS\n\n")
@@ -127,76 +127,62 @@ print(vif(model))
 cat("\n")
 
 cat("Correlation Matrix\n")
-print(cor(data.frame(peak_date = as.numeric(mult_regression$peak_date), 
-                     distance_black = mult_regression$distance_black, 
-                     sh = mult_regression$sh, 
-                     school = as.numeric(mult_regression$school)))) 
+print(cor(data.frame(peak_date = as.numeric(mult_regression$peak_date), distance_black = mult_regression$distance_black, sh = mult_regression$sh, school = as.numeric(mult_regression$school))))
 
 
-#################################################################################
-#
-#           Analysis of all cities using the red distance
-#
-#
-#################################################################################
+################################################################################# Analysis of all cities using the red distance
 
 
-if ( red ) {
-  model_Rdistance <- lm(as.numeric(peak_date) ~ distance_red, data = mult_regression)
-  model_sh <- lm(as.numeric(peak_date) ~ sh, data = mult_regression)
-  model_school <- lm(as.numeric(peak_date) ~ school, data = mult_regression)
-  
-  model_Rdistance_sh <- lm(as.numeric(peak_date) ~ distance_red + sh, data = mult_regression)
-  model_sh_school <- lm(as.numeric(peak_date) ~ sh + school, data = mult_regression)
-  model_school_Rdistance <- lm(as.numeric(peak_date) ~ school + distance_red, data = mult_regression)
-  
-  
-  Rmodel <- lm(as.numeric(peak_date) ~ distance_red + as.numeric(school) + sh, data = mult_regression)
-  
-  
-  print(summary(model_Rdistance))
-  print(summary(model_sh))
-  print(summary(model_school))
-  
-  print(summary(model_Rdistance_sh))
-  print(summary(model_sh_school))
-  print(summary(model_school_Rdistance))
-  
-  print(summary(Rmodel))
-  cat("vif(model_Rdistance_sh)")
-  print(vif(model_Rdistance_sh))
-  cat("vif(model_sh_school)")
-  print(vif(model_sh_school))
-  cat("vif(model_school_Rdistance)")
-  print(vif(model_school_Rdistance))
-  cat("vif(Rmodel)")
-  
-  print(vif(Rmodel))
-  
-  cat("Correlation Matrix")
-  print(cor(data.frame(as.numeric(mult_regression$peak_date), mult_regression$distance_red, 
-                       mult_regression$sh, as.numeric(mult_regression$school)))) 
-  
+if (red) {
+    model_Rdistance <- lm(as.numeric(peak_date) ~ distance_red, data = mult_regression)
+    model_sh <- lm(as.numeric(peak_date) ~ sh, data = mult_regression)
+    model_school <- lm(as.numeric(peak_date) ~ school, data = mult_regression)
+    
+    model_Rdistance_sh <- lm(as.numeric(peak_date) ~ distance_red + sh, data = mult_regression)
+    model_sh_school <- lm(as.numeric(peak_date) ~ sh + school, data = mult_regression)
+    model_school_Rdistance <- lm(as.numeric(peak_date) ~ school + distance_red, data = mult_regression)
+    
+    
+    Rmodel <- lm(as.numeric(peak_date) ~ distance_red + as.numeric(school) + sh, data = mult_regression)
+    
+    
+    print(summary(model_Rdistance))
+    print(summary(model_sh))
+    print(summary(model_school))
+    
+    print(summary(model_Rdistance_sh))
+    print(summary(model_sh_school))
+    print(summary(model_school_Rdistance))
+    
+    print(summary(Rmodel))
+    cat("vif(model_Rdistance_sh)")
+    print(vif(model_Rdistance_sh))
+    cat("vif(model_sh_school)")
+    print(vif(model_sh_school))
+    cat("vif(model_school_Rdistance)")
+    print(vif(model_school_Rdistance))
+    cat("vif(Rmodel)")
+    
+    print(vif(Rmodel))
+    
+    cat("Correlation Matrix")
+    print(cor(data.frame(as.numeric(mult_regression$peak_date), mult_regression$distance_red, mult_regression$sh, as.numeric(mult_regression$school))))
+    
 }
 
-#################################################################################
-#
-#           Analysis of red cities using the red distance
-#
-#
-#################################################################################
+################################################################################# Analysis of red cities using the red distance
 cat("\n\n\n\n")
 cat("########################################################################### \n\n")
 cat("MPZ DATA: MULTIPLE REGRESSION ANALYSIS ONLY EAST CITIES USING RED DISTANCE \n\n")
 cat("########################################################################### \n\n\n\n")
 
-model_Rdistance <- lm(as.numeric(peak_date) ~ distance_red, data = mult_regression[which(mult_regression$color=="red"),])
-model_sh <- lm(as.numeric(peak_date) ~ sh, data = mult_regression[which(mult_regression$color=="red"),])
-model_school <- lm(as.numeric(peak_date) ~ as.numeric(school), data = mult_regression[which(mult_regression$color=="red"),])
+model_Rdistance <- lm(as.numeric(peak_date) ~ distance_red, data = mult_regression[which(mult_regression$color == "red"), ])
+model_sh <- lm(as.numeric(peak_date) ~ sh, data = mult_regression[which(mult_regression$color == "red"), ])
+model_school <- lm(as.numeric(peak_date) ~ as.numeric(school), data = mult_regression[which(mult_regression$color == "red"), ])
 
-model_Rdistance_sh <- lm(as.numeric(peak_date) ~ distance_red + sh, data = mult_regression[which(mult_regression$color=="red"),])
-model_sh_school <- lm(as.numeric(peak_date) ~ sh + as.numeric(school), data = mult_regression[which(mult_regression$color=="red"),])
-model_school_Rdistance <- lm(as.numeric(peak_date) ~ as.numeric(school) + distance_red, data = mult_regression[which(mult_regression$color=="red"),])
+model_Rdistance_sh <- lm(as.numeric(peak_date) ~ distance_red + sh, data = mult_regression[which(mult_regression$color == "red"), ])
+model_sh_school <- lm(as.numeric(peak_date) ~ sh + as.numeric(school), data = mult_regression[which(mult_regression$color == "red"), ])
+model_school_Rdistance <- lm(as.numeric(peak_date) ~ as.numeric(school) + distance_red, data = mult_regression[which(mult_regression$color == "red"), ])
 
 
 
@@ -244,7 +230,6 @@ print(vif(Rmodel))
 cat("\n")
 cat("(Red Only) Correlation Matrix")
 cat("\n")
-print(cor(data.frame(peak_date = as.numeric(mult_regression[which(mult_regression$color=="red"),]$peak_date), 
-                     distance_red = mult_regression[which(mult_regression$color=="red"),]$distance_red, 
-                     sh = mult_regression[which(mult_regression$color=="red"),]$sh, 
-                     school = as.numeric(mult_regression[which(mult_regression$color=="red"),]$school)))) 
+print(cor(data.frame(peak_date = as.numeric(mult_regression[which(mult_regression$color == "red"), ]$peak_date), distance_red = mult_regression[which(mult_regression$color == 
+    "red"), ]$distance_red, sh = mult_regression[which(mult_regression$color == "red"), ]$sh, school = as.numeric(mult_regression[which(mult_regression$color == "red"), 
+    ]$school)))) 
