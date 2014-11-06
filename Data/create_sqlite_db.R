@@ -1,6 +1,6 @@
 require(sqldf)
 
-BSVE_dbConn <- dbConnect(SQLite(), dbname = "BSVE.sqlite")
+bsve_db <- dbConnect(SQLite(), dbname = "BSVE.sqlite")
 
 # date_week_num <- data.frame(week_start_date = as.Date('1989-12-31'), week_end_date = as.Date('1990-01-06'), Week = 1, Year = 1990) for ( i in 2:1400 ) {
 # date1_end <- date_week_num[ i-1, 2] date2_end <- date1_end + 7 date1_start <- date_week_num[ i-1, 1] date2_start <- date1_start + 7 if ( format(date2_end, '%m')
@@ -29,11 +29,11 @@ for (i in 2:ncol(GFT_City_Data)) {
     
 }
 
-sql_gft_city_statement <- paste("create table GFT_CITY(Date text unique,", paste(names(GFT_City_Data[, c(2:ncol(GFT_City_Data))]), collapse = " integer, "), "integer, primary key (Date))")
+sql_gft_city_statement <- paste("create table ili_gft_city_percent(Date text unique,", paste(names(GFT_City_Data[, c(2:ncol(GFT_City_Data))]), collapse = " integer, "), "integer, primary key (Date))")
 
-dbGetQuery(BSVE_dbConn, sql_gft_city_statement)
+dbGetQuery(bsve_db, sql_gft_city_statement)
 
-dbWriteTable(conn = BSVE_dbConn, name = "GFT_CITY", value = GFT_City_Data, row.names = FALSE, append = TRUE)
+dbWriteTable(conn = bsve_db, name = "ili_gft_city_percent", value = GFT_City_Data, row.names = FALSE, append = TRUE)
 
 
 
@@ -52,11 +52,11 @@ for (i in 2:ncol(GFT_State_Data)) {
     GFT_State_Data[, i] <- GFT_State_Data[, i]/1e+05
 }
 
-sql_gft_state_statement <- paste("create table GFT_STATE(Date text unique,", paste(names(GFT_State_Data[, c(2:ncol(GFT_State_Data))]), collapse = " integer, "), "integer, primary key (Date))")
+sql_gft_state_statement <- paste("create table ili_gft_state_percent(Date text unique,", paste(names(GFT_State_Data[, c(2:ncol(GFT_State_Data))]), collapse = " integer, "), "integer, primary key (Date))")
 
-dbGetQuery(BSVE_dbConn, sql_gft_state_statement)
+dbGetQuery(bsve_db, sql_gft_state_statement)
 
-dbWriteTable(conn = BSVE_dbConn, name = "GFT_STATE", value = GFT_State_Data, row.names = FALSE, append = TRUE)
+dbWriteTable(conn = bsve_db, name = "ili_gft_state_percent", value = GFT_State_Data, row.names = FALSE, append = TRUE)
 
 
 
@@ -74,12 +74,12 @@ for (i in 2:ncol(GFT_HHS_Regional_Data)) {
     GFT_HHS_Regional_Data[, i] <- GFT_HHS_Regional_Data[, i]/1e+05
 }
 
-sql_gft_hhs_statement <- paste("create table GFT_HHS(Date text unique,", paste(names(GFT_HHS_Regional_Data[, c(2:ncol(GFT_HHS_Regional_Data))]), collapse = " integer, "), 
+sql_gft_hhs_statement <- paste("create table ili_gft_hhs_percent(Date text unique,", paste(names(GFT_HHS_Regional_Data[, c(2:ncol(GFT_HHS_Regional_Data))]), collapse = " integer, "), 
     "integer, primary key (Date))")
 
-dbGetQuery(BSVE_dbConn, sql_gft_hhs_statement)
+dbGetQuery(bsve_db, sql_gft_hhs_statement)
 
-dbWriteTable(conn = BSVE_dbConn, name = "GFT_HHS", value = GFT_HHS_Regional_Data, row.names = FALSE, append = TRUE)
+dbWriteTable(conn = bsve_db, name = "ili_gft_hhs_percent", value = GFT_HHS_Regional_Data, row.names = FALSE, append = TRUE)
 
 
 
@@ -108,7 +108,7 @@ for (i in 5:ncol(CDC_CENSUS_Regional_Data)) {
 
 for (i in 1:length(CDC_CENSUS_LIST)) {
     
-    dbWriteTable(conn = BSVE_dbConn, name = paste("CDC_CENSUS_", names(CDC_CENSUS_Regional_Data)[i + 4], sep = ""), value = CDC_CENSUS_LIST[[i]], row.names = FALSE)
+    dbWriteTable(conn = bsve_db, name = paste("ili_cdc_census_", names(CDC_CENSUS_Regional_Data)[i + 4], sep = ""), value = CDC_CENSUS_LIST[[i]], row.names = FALSE)
     
 }
 
@@ -139,7 +139,7 @@ for (i in 5:ncol(CDC_HHS_Regional_Data)) {
 
 for (i in 1:length(CDC_HHS_LIST)) {
     
-    dbWriteTable(conn = BSVE_dbConn, name = paste("CDC_HHS_", names(CDC_HHS_Regional_Data)[i + 4], sep = ""), value = CDC_HHS_LIST[[i]], row.names = FALSE)
+    dbWriteTable(conn = bsve_db, name = paste("ili_cdc_hhs_", names(CDC_HHS_Regional_Data)[i + 4], sep = ""), value = CDC_HHS_LIST[[i]], row.names = FALSE)
     
 }
 
@@ -151,11 +151,22 @@ for (i in 1:length(CDC_HHS_LIST)) {
 
 CDC_National_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2DataNational/ILINet_national.csv", header = TRUE, check.names = TRUE, stringsAsFactors = FALSE)
 
-CDC_National_Data <- CDC_National_Data[, c(1, 3:ncol(CDC_National_Data))]
-
 names(CDC_National_Data) <- gsub("\\.", "_", names(CDC_National_Data))
 
-dbWriteTable(conn = BSVE_dbConn, name = "CDC_NATIONAL", value = CDC_National_Data, row.names = FALSE)
+CDC_National_LIST <- list()
+
+for ( i in 4:ncol(WHO_National_Data) ) {
+  
+  CDC_National_LIST[[i - 3]] <- data.frame(year = CDC_National_Data$YEAR, week = CDC_National_Data$WEEK, value = CDC_National_Data[,i] )
+  names(CDC_National_LIST[[i - 3]])[3] <- names(CDC_National_Data)[i + 4]
+}
+
+for (i in 1:length(CDC_National_LIST)) {
+  
+  dbWriteTable(conn = bsve_db, name = paste("ili_cdc_national_", names(CDC_National_Data)[i + 4], sep = ""), value = CDC_National_LIST[[i]], row.names = FALSE)
+  
+}
+
 
 
 
@@ -185,7 +196,7 @@ for (i in 5:ncol(WHO_CENSUS_Regional_Data)) {
 
 for (i in 1:length(WHO_CENSUS_LIST)) {
     
-    dbWriteTable(conn = BSVE_dbConn, name = paste("WHO_CENSUS_", names(WHO_CENSUS_Regional_Data)[i + 4], sep = ""), value = WHO_CENSUS_LIST[[i]], row.names = FALSE)
+    dbWriteTable(conn = bsve_db, name = paste("ili_who_census_", names(WHO_CENSUS_Regional_Data)[i + 4], sep = ""), value = WHO_CENSUS_LIST[[i]], row.names = FALSE)
     
 }
 
@@ -215,7 +226,7 @@ for (i in 5:ncol(WHO_HHS_Regional_Data)) {
 
 for (i in 1:length(WHO_HHS_LIST)) {
     
-    dbWriteTable(conn = BSVE_dbConn, name = paste("WHO_HHS_", names(WHO_HHS_Regional_Data)[i + 4], sep = ""), value = WHO_HHS_LIST[[i]], row.names = FALSE)
+    dbWriteTable(conn = bsve_db, name = paste("ili_who_hhs_", names(WHO_HHS_Regional_Data)[i + 4], sep = ""), value = WHO_HHS_LIST[[i]], row.names = FALSE)
     
 }
 
@@ -226,11 +237,116 @@ for (i in 1:length(WHO_HHS_LIST)) {
 
 WHO_National_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2DataNational/ILINet_national.csv", header = TRUE, check.names = TRUE, stringsAsFactors = FALSE)
 
-WHO_National_Data <- WHO_National_Data[, c(1, 3:ncol(WHO_National_Data))]
-
 names(WHO_National_Data) <- gsub("\\.", "_", names(WHO_National_Data))
 
-dbWriteTable(conn = BSVE_dbConn, name = "WHO_NATIONAL", value = WHO_National_Data, row.names = FALSE)
+WHO_National_LIST <- list()
+
+for ( i in 4:ncol(WHO_National_Data) ) {
+  
+  WHO_National_LIST[[i - 3]] <- data.frame(year = WHO_National_Data$YEAR, week = WHO_National_Data$WEEK, value = WHO_National_Data[,i] )
+  names(WHO_National_LIST[[i - 3]])[3] <- names(WHO_National_Data)[i + 4]
+}
+
+for (i in 1:length(WHO_National_LIST)) {
+  
+  dbWriteTable(conn = bsve_db, name = paste("ili_who_national_", names(WHO_National_Data)[i + 4], sep = ""), value = WHO_National_LIST[[i]], row.names = FALSE)
+  
+}
+
+ili_mpz <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.pandemic.TOP100.curves.by.zip5.20000101.20111231.txt", stringsAsFactors = FALSE)
+
+row.names(ili_mpz) <- NULL
+
+ili_mpz$date <- as.Date(ili_mpz$date, "%m/%d/%y")
+
+sql_mpz_statement <- paste("create table ili_mpz_zip_cases(week integer, date text unique,", paste(names(ili_mpz[, 3:ncol(ili_mpz)]), collapse = " integer, "), "integer, primary key (date))")
+
+dbGetQuery(bsve_db, sql_mpz_statement)
+
+dbWriteTable(conn = bsve_db, name = "ili_mpz_zip_cases", value = ili_mpz, append = TRUE)
 
 
-dbDisconnect(BSVE_dbConn) 
+
+
+pH1N1_mpz_age1 <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.pandemic.TOP100.curves.by.zip5.20090315.20100715.AGE1.txt", stringsAsFactors = FALSE)
+
+names(pH1N1_mpz_age1)[1] <- "week"
+
+row.names(pH1N1_mpz_age1) <- NULL
+
+sql_mpz_age1_statement <- paste("create table pH1N1_mpz_zip_age1(week integer, date text unique,", 
+                           paste(names(pH1N1_mpz_age1[, 3:ncol(pH1N1_mpz_age1)]), collapse = " integer, "), "integer, primary key (date))")
+
+dbGetQuery(bsve_db, sql_mpz_age1_statement)
+
+dbWriteTable(conn = bsve_db, name = "pH1N1_mpz_zip_age1", value = pH1N1_mpz_age1, append = TRUE)
+
+
+
+
+
+pH1N1_mpz_age2 <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.pandemic.TOP100.curves.by.zip5.20090315.20100715.AGE2.txt", stringsAsFactors = FALSE)
+
+sql_mpz_age2_statement <- paste("create table pH1N1_mpz_zip_age2(week integer, date text unique,", 
+                                paste(names(pH1N1_mpz_age2[, 3:ncol(pH1N1_mpz_age2)]), collapse = " integer, "), "integer, primary key (date))")
+
+names(pH1N1_mpz_age2)[1] <- "week"
+
+row.names(pH1N1_mpz_age2) <- NULL
+
+dbGetQuery(bsve_db, sql_mpz_age2_statement)
+
+dbWriteTable(conn = bsve_db, name = "pH1N1_mpz_zip_age2", value = pH1N1_mpz_age2, append = TRUE)
+
+
+
+
+pH1N1_mpz <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.pandemic.curves.by.zip5.20090320.20100628.txt", stringsAsFactors = FALSE)
+
+row.names(pH1N1_mpz) <- NULL
+
+pH1N1_mpz$date <- as.Date(pH1N1_mpz$date, "%m/%d/%y")
+
+sql_mpz_h1n1_statement <- paste("create table pH1N1_mpz_zip_cases(week integer, date text unique,", 
+                                paste(names(pH1N1_mpz[, 3:ncol(pH1N1_mpz)]), collapse = " integer, "), "integer, primary key (date))")
+
+dbGetQuery(bsve_db, sql_mpz_h1n1_statement)
+
+dbWriteTable(conn = bsve_db, name = "pH1N1_mpz_zip_cases", value = pH1N1_mpz, append = TRUE)
+
+
+
+
+
+
+sh_ili <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.specific.humidity.by.zip5.20000103.20111226.txt", stringsAsFactors = FALSE)
+
+sh_ili <- sh_ili[,2:ncol(sh_ili)]
+
+row.names(sh_ili) <- NULL
+
+sh_ili$date <- as.Date(sh_ili$date, "%m/%d/%y")
+
+sql_sh_ili_statement <- paste("create table ili_mpz_zip_sh(week integer, date text unique,", 
+                                paste(names(sh_ili[, 3:ncol(sh_ili)]), collapse = " real, "), "real, primary key (date))")
+
+dbGetQuery(bsve_db, sql_sh_ili_statement)
+
+dbWriteTable(bsve_db, "ili_mpz_zip_sh", sh_ili, append = TRUE)
+
+
+
+sh_pH1N1 <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.specific.humidity.by.zip5.20090320.20100628.txt", stringsAsFactors = FALSE)
+
+sh_pH1N1 <- sh_ili[,2:ncol(sh_pH1N1)]
+
+row.names(sh_pH1N1) <- NULL
+
+sh_pH1N1$date <- as.Date(sh_pH1N1$date, "%m/%d/%y")
+
+sql_sh_pH1N1_statement <- paste("create table pH1N1_mpz_zip_sh(week integer, date text unique,", 
+                              paste(names(sh_pH1N1[, 3:ncol(sh_pH1N1)]), collapse = " real, "), "real, primary key (date))")
+
+dbGetQuery(bsve_db, sql_sh_pH1N1_statement)
+
+dbWriteTable(bsve_db, "pH1N1_mpz_zip_sh", sh_pH1N1, append = TRUE)
