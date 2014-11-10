@@ -94,6 +94,30 @@ CDC_CENSUS_Regional_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2Dat
 
 names(CDC_CENSUS_Regional_Data) <- gsub("\\.", "_", names(CDC_CENSUS_Regional_Data))
 
+for (i in 1:ncol(CDC_CENSUS_Regional_Data)) {
+  x_index <- which(CDC_CENSUS_Regional_Data[,i] == "X")
+  if ( length(x_index) != 0 ) {
+    CDC_CENSUS_Regional_Data[x_index,i] <- NA
+    CDC_CENSUS_Regional_Data[,i] <- as.numeric(CDC_CENSUS_Regional_Data[,i])
+  }
+}
+
+
+
+
+
+# CDC_CENSUS_Regional_Data$AGE_0_4 <- as.integer(CDC_CENSUS_Regional_Data$AGE_0_4)
+# 
+# CDC_CENSUS_Regional_Data$AGE_25_49 <- as.integer(CDC_CENSUS_Regional_Data$AGE_25_49)
+# 
+# CDC_CENSUS_Regional_Data$AGE_25_64 <- as.integer(CDC_CENSUS_Regional_Data$AGE_25_64)
+# 
+# CDC_CENSUS_Regional_Data$AGE_50_64 <- as.integer(CDC_CENSUS_Regional_Data$AGE_50_64)
+# 
+# CDC_CENSUS_Regional_Data$AGE_5_24 <- as.integer(CDC_CENSUS_Regional_Data$AGE_5_24)
+# 
+# CDC_CENSUS_Regional_Data$AGE_65 <- as.integer(CDC_CENSUS_Regional_Data$AGE_65)
+
 CDC_CENSUS_LIST <- list()
 
 for (i in 5:ncol(CDC_CENSUS_Regional_Data)) {
@@ -153,12 +177,20 @@ CDC_National_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2DataNation
 
 names(CDC_National_Data) <- gsub("\\.", "_", names(CDC_National_Data))
 
+for ( i in 10:15 ) {
+  x_index <- which(CDC_National_Data[,i] == "X")
+  if ( length(x_index) != 0 ) {
+    CDC_National_Data[x_index,i] <- NA
+    CDC_National_Data[,i] <- as.numeric(CDC_National_Data[,i])
+  }
+  
+}
 CDC_National_LIST <- list()
 
-for ( i in 4:ncol(CDC_National_Data) ) {
+for ( i in 5:ncol(CDC_National_Data) ) {
   
-  CDC_National_LIST[[i - 3]] <- data.frame(year = CDC_National_Data$YEAR, week = CDC_National_Data$WEEK, value = CDC_National_Data[,i] )
-  names(CDC_National_LIST[[i - 3]])[3] <- names(CDC_National_Data)[i + 4]
+  CDC_National_LIST[[i - 4]] <- data.frame(year = CDC_National_Data$YEAR, week = CDC_National_Data$WEEK, value = CDC_National_Data[,i] )
+  names(CDC_National_LIST[[i - 4]])[3] <- names(CDC_National_Data)[i]
 }
 
 for (i in 1:length(CDC_National_LIST)) {
@@ -181,6 +213,14 @@ for (i in 1:length(CDC_National_LIST)) {
 WHO_CENSUS_Regional_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2Data CITY/WHO_NREVSSCITY.csv", header = TRUE, check.names = TRUE, stringsAsFactors = FALSE)
 
 names(WHO_CENSUS_Regional_Data) <- gsub("\\.", "_", names(WHO_CENSUS_Regional_Data))
+
+for (i in 1:ncol(WHO_CENSUS_Regional_Data)) {
+  x_index <- which(WHO_CENSUS_Regional_Data[,i] == "X")
+  if ( length(x_index) != 0 ) {
+    WHO_CENSUS_Regional_Data[x_index,i] <- NA
+    WHO_CENSUS_Regional_Data[,i] <- as.numeric(WHO_CENSUS_Regional_Data[,i])
+  }
+}
 
 WHO_CENSUS_LIST <- list()
 
@@ -212,6 +252,15 @@ for (i in 1:length(WHO_CENSUS_LIST)) {
 WHO_HHS_Regional_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2Data Regional/WHO_NREVSS_REGIONAL.csv", header = TRUE, check.names = TRUE, stringsAsFactors = FALSE)
 
 names(WHO_HHS_Regional_Data) <- gsub("\\.", "_", names(WHO_HHS_Regional_Data))
+
+for (i in 1:ncol(WHO_HHS_Regional_Data)) {
+  x_index <- which(WHO_HHS_Regional_Data[,i] == "X")
+  if ( length(x_index) != 0 ) {
+    WHO_HHS_Regional_Data[x_index,i] <- NA
+    WHO_HHS_Regional_Data[,i] <- as.numeric(WHO_HHS_Regional_Data[,i])
+  }
+}
+
 WHO_HHS_LIST <- list()
 
 for (i in 5:ncol(WHO_HHS_Regional_Data)) {
@@ -239,12 +288,21 @@ WHO_National_Data <- read.csv(file = "~/GFTvsILINET/DATA/FluViewPhase2DataNation
 
 names(WHO_National_Data) <- gsub("\\.", "_", names(WHO_National_Data))
 
+for ( i in 10:15 ) {
+  x_index <- which(WHO_National_Data[,i] == "X")
+  if ( length(x_index) != 0 ) {
+    WHO_National_Data[x_index,i] <- NA
+    WHO_National_Data[,i] <- as.numeric(WHO_National_Data[,i])
+  }
+  
+}
+
 WHO_National_LIST <- list()
 
-for ( i in 4:ncol(WHO_National_Data) ) {
+for ( i in 5:ncol(WHO_National_Data) ) {
   
-  WHO_National_LIST[[i - 3]] <- data.frame(year = WHO_National_Data$YEAR, week = WHO_National_Data$WEEK, value = WHO_National_Data[,i] )
-  names(WHO_National_LIST[[i - 3]])[3] <- names(WHO_National_Data)[i + 4]
+  WHO_National_LIST[[i - 4]] <- data.frame(year = WHO_National_Data$YEAR, week = WHO_National_Data$WEEK, value = WHO_National_Data[,i] )
+  names(WHO_National_LIST[[i - 4]])[3] <- names(WHO_National_Data)[i]
 }
 
 for (i in 1:length(WHO_National_LIST)) {
@@ -418,24 +476,50 @@ dbWriteTable(bsve_db, "pop_zip", pop_zip)
 
 ## census_data
 load("~/tests/p-medds/pmedds.core/data/region_state_census.RData")
-pop_national <- cbind(data.frame(country = "United States"), census_data[1,])
+pop_national <- data.frame(year = 2000:2013, population = unname(unlist(census_data[1,])))
 row.names(pop_national) <- NULL
 dbWriteTable(bsve_db, "pop_national", pop_national)
 
-pop_state <- cbind(data.frame(state = row.names(census_data)[6:57]), census_data[6:57,])
+
+pop_state <- data.frame(year = 2000:2013)
+
+for ( i in 6:57 ) {
+  pop_state <- cbind(pop_state, temp = unlist(unname(census_data[i,])))
+  names(pop_state)[i-4] <- row.names(census_data)[i]
+}
+names(pop_state) <-  gsub(" ", "_", names(pop_state))
 row.names(pop_state) <- NULL
 dbWriteTable(bsve_db, "pop_state", pop_state)
 
-pop_hhs <- cbind(data.frame(state = row.names(census_data)[58:67]), census_data[58:67,])
+
+
+pop_hhs <- data.frame(year = 2000:2013)
+
+for ( i in 58:67 ) {
+  pop_hhs <- cbind(pop_hhs, temp = unlist(unname(census_data[i,])))
+  names(pop_hhs)[i-56] <- row.names(census_data)[i]
+}
+names(pop_hhs) <-  gsub(" ", "_", names(pop_hhs))
 row.names(pop_hhs) <- NULL
 dbWriteTable(bsve_db, "pop_hhs", pop_hhs)
 
-pop_region <- cbind(data.frame(state = row.names(census_data)[2:6]), census_data[2:6,])
+
+pop_region <- data.frame(year = 2000:2013)
+
+for ( i in 2:5 ) {
+  pop_region <- cbind(pop_region, temp = unlist(unname(census_data[i,])))
+  names(pop_region)[i] <- row.names(census_data)[i]
+}
+names(pop_region) <-  gsub(" ", "_", names(pop_region))
 row.names(pop_region) <- NULL
 dbWriteTable(bsve_db, "pop_region", pop_region)
 
+
+
+
 school_zip <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.school.closure.by.zip5.20000103.20131230.txt", header = TRUE)
-school_zip$date <- as.Date(school_zip$date, "%m/%d/%y")
+row.names(school_zip) <- NULL
+school_zip$date <- as.character(as.Date(school_zip$date, "%m/%d/%y"))
 dbWriteTable(bsve_db, "school_zip", school_zip)
 
 
@@ -444,7 +528,7 @@ mers <- read.csv("~/Downloads/cases-v1.csv", stringsAsFactors = FALSE)
 
 row.names(mers) <- NULL
 
-mers$date <- as.Date(mers$date, "%m/%d/%y")
+mers$date <- as.character(as.Date(mers$date, "%m/%d/%y"))
 
 sql_mers <- "create table mers(date text unique, week integer, cases integer, death integer, primary key(date))"
 
@@ -453,7 +537,7 @@ dbGetQuery(bsve_db, sql_mers)
 dbWriteTable(bsve_db, "mers", mers, append = TRUE)
 
 
-
+#cat(paste(dbListTables(bsve_db),collapse = "\n"))
 
 
 #region_census <- read.csv("~/tests/p-medds/pmedds.core/data/region_state_census.csv", header = TRUE)
