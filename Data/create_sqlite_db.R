@@ -1,6 +1,6 @@
 require(sqldf)
 
-bsve_db <- dbConnect(SQLite(), dbname = "BSVE.sqlite")
+bsve_db <- dbConnect(SQLite(), dbname = "~/predictiveScience/BSVE.sqlite")
 
 # date_week_num <- data.frame(week_start_date = as.Date('1989-12-31'), week_end_date = as.Date('1990-01-06'), Week = 1, Year = 1990) for ( i in 2:1400 ) {
 # date1_end <- date_week_num[ i-1, 2] date2_end <- date1_end + 7 date1_start <- date_week_num[ i-1, 1] date2_start <- date1_start + 7 if ( format(date2_end, '%m')
@@ -155,7 +155,7 @@ names(CDC_National_Data) <- gsub("\\.", "_", names(CDC_National_Data))
 
 CDC_National_LIST <- list()
 
-for ( i in 4:ncol(WHO_National_Data) ) {
+for ( i in 4:ncol(CDC_National_Data) ) {
   
   CDC_National_LIST[[i - 3]] <- data.frame(year = CDC_National_Data$YEAR, week = CDC_National_Data$WEEK, value = CDC_National_Data[,i] )
   names(CDC_National_LIST[[i - 3]])[3] <- names(CDC_National_Data)[i + 4]
@@ -350,3 +350,113 @@ sql_sh_pH1N1_statement <- paste("create table pH1N1_mpz_zip_sh(week integer, dat
 dbGetQuery(bsve_db, sql_sh_pH1N1_statement)
 
 dbWriteTable(bsve_db, "pH1N1_mpz_zip_sh", sh_pH1N1, append = TRUE)
+
+
+
+
+sars_canada <- read.table("~/tests/p-medds/pmedds.core/data/sarscanada2003.txt", header = TRUE)
+
+sql_sars_canada_statement <- "create table sars_canada(day integer unique, cases integer, primary key (day))"
+
+dbGetQuery(bsve_db, sql_sars_canada_statement)
+
+dbWriteTable(bsve_db, "sars_canada", sars_canada, append = TRUE)
+
+
+
+
+sars_china <- read.table("~/tests/p-medds/pmedds.core/data/sarschina2003.txt", header = TRUE)
+
+sql_sars_china_statement <- "create table sars_china(day integer unique, cases integer, primary key (day))"
+
+dbGetQuery(bsve_db, sql_sars_china_statement)
+
+dbWriteTable(bsve_db, "sars_china", sars_china, append = TRUE)
+
+
+
+
+
+sars_hongkong <- read.table("~/tests/p-medds/pmedds.core/data/sarshongkong2003.txt", header = TRUE)
+
+sql_sars_hongkong_statement <- "create table sars_hongkong(day integer unique, cases integer, primary key (day))"
+
+dbGetQuery(bsve_db, sql_sars_hongkong_statement)
+
+dbWriteTable(bsve_db, "sars_hongkong", sars_hongkong, append = TRUE)
+
+
+
+
+sars_singapore <- read.table("~/tests/p-medds/pmedds.core/data/sarssingapore2003.txt", header = TRUE)
+
+sql_sars_singapore_statement <- "create table sars_singapore(day integer unique, cases integer, primary key (day))"
+
+dbGetQuery(bsve_db, sql_sars_singapore_statement)
+
+dbWriteTable(bsve_db, "sars_singapore", sars_singapore, append = TRUE)
+
+
+
+
+sars_vietnam <- read.table("~/tests/p-medds/pmedds.core/data/sarsvietnam2003.txt", header = TRUE)
+
+sql_sars_vietnam_statement <- "create table sars_vietnam(day integer unique, cases integer, primary key (day))"
+
+dbGetQuery(bsve_db, sql_sars_vietnam_statement)
+
+dbWriteTable(bsve_db, "sars_vietnam", sars_vietnam, append = TRUE)
+
+
+
+pop_zip <- read.table("~/tests/p-medds/pmedds.core/data/population.txt", header = TRUE)
+
+dbWriteTable(bsve_db, "pop_zip", pop_zip)
+
+
+
+
+## census_data
+load("~/tests/p-medds/pmedds.core/data/region_state_census.RData")
+pop_national <- cbind(data.frame(country = "United States"), census_data[1,])
+row.names(pop_national) <- NULL
+dbWriteTable(bsve_db, "pop_national", pop_national)
+
+pop_state <- cbind(data.frame(state = row.names(census_data)[6:57]), census_data[6:57,])
+row.names(pop_state) <- NULL
+dbWriteTable(bsve_db, "pop_state", pop_state)
+
+pop_hhs <- cbind(data.frame(state = row.names(census_data)[58:67]), census_data[58:67,])
+row.names(pop_hhs) <- NULL
+dbWriteTable(bsve_db, "pop_hhs", pop_hhs)
+
+pop_region <- cbind(data.frame(state = row.names(census_data)[2:6]), census_data[2:6,])
+row.names(pop_region) <- NULL
+dbWriteTable(bsve_db, "pop_region", pop_region)
+
+school_zip <- read.table("~/tests/p-medds/pmedds.core/data/ILI.small.school.closure.by.zip5.20000103.20131230.txt", header = TRUE)
+school_zip$date <- as.Date(school_zip$date, "%m/%d/%y")
+dbWriteTable(bsve_db, "school_zip", school_zip)
+
+
+
+mers <- read.csv("~/Downloads/cases-v1.csv", stringsAsFactors = FALSE)
+
+row.names(mers) <- NULL
+
+mers$date <- as.Date(mers$date, "%m/%d/%y")
+
+sql_mers <- "create table mers(date text unique, week integer, cases integer, death integer, primary key(date))"
+
+dbGetQuery(bsve_db, sql_mers)
+
+dbWriteTable(bsve_db, "mers", mers, append = TRUE)
+
+
+
+
+
+#region_census <- read.csv("~/tests/p-medds/pmedds.core/data/region_state_census.csv", header = TRUE)
+
+
+

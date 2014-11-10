@@ -1,9 +1,12 @@
 ebola <- read.csv("~/Dropbox/LEPR01/ebola/data/west.africa.best.csv", stringsAsFactors = FALSE)
 ebola[, 1] <- as.Date(ebola[, 1], "%m/%d/%y")
 
+ebola[7,3] <- NA
+ebola[c(5,7),5] <- NA
+
 # ebola$Cases_Liberia[3] <- NA
 names <- c("Guinea", "Liberia", "Sierra Leone")
-png("~/Desktop/plos_legend_figure.png", width = 800)
+pdf("~/Desktop/plos_legend_figure.pdf", width = 11, height = 7.5)
 par(mfcol = c(2, 3))
 par(mar = c(5.1, 5.1, 3.1, 5.1))
 m <- matrix(c(1, 3, 5, 2, 4, 6, 7, 7, 7), nrow = 3, ncol = 3, byrow = TRUE)
@@ -34,8 +37,8 @@ for (j in 3:5) {
         }
     }
     
-    plot(x = ebola[which(is.element(ebola[, 1], doubling_times$date)), 1], y = ebola[which(is.element(ebola[, 1], doubling_times$date)), j], type = "l", ylab = "Cumulative Total", 
-        xlab = "Date", main = names[j - 2])
+    plot(x = ebola[which(is.element(ebola[, 1], doubling_times$date)), 1], y = ebola[which(is.element(ebola[, 1], doubling_times$date)), j], type = "l", ylab = "C.A.R.", 
+        xlab = "Date", main = names[j - 2], cex.axis = 1.4, cex.lab = 1.4, cex.main = 1.4)
     conf_int = quantile(doubling_times[which(is.finite(doubling_times$doubling_time)), 2], probs = c(0.05, 0.95))
     
     lowerq = quantile(doubling_times[which(is.finite(doubling_times$doubling_time)), 2])[2]
@@ -53,7 +56,8 @@ for (j in 3:5) {
     # col[which((doubling_times[, 2]) > upperq + 1.5*iqr)] <- 'blue'
     
     
-    plot(doubling_times[, 1], doubling_times[, 2], col = col, pch = 20, ylab = "Doubling Time (days)", xlab = "Date", main = names[j - 2])
+    plot(doubling_times[, 1], doubling_times[, 2], col = col, pch = 20, ylab = "Doubling Time (days)", xlab = "Date", main = names[j - 2],
+         cex.axis = 1.4, cex.lab = 1.4, cex.main = 1.4)
     lm <- lm(doubling_time ~ as.numeric(date), doubling_times[which(col == "black"), ])
     # lm <- lm(doubling_time ~ as.numeric(date), doubling_times[which(col != 'red'), ])
     
@@ -100,7 +104,7 @@ for (j in 3:5) {
 par(pty = "m")
 par(mar = c(5.1, 4.1, 0, 2.1))
 plot(1, type = "n", axes = FALSE, xlab = "", ylab = "")
-legend("top", c(black, blue, red, light_blue), col = c("black", "blue", "red", rainbow(1, start = 0.5, alpha = 0.5)), text.width = c(0.082, 0.1, 0.07, 0.08), pch = c(20, 
-    20, 20, NA), lty = c(NA, NA, NA, 1), lwd = 3, horiz = TRUE, bty = "n", title = "Legend", x.intersp = c(0.2, 0.2, 0.2, 0.5))
+legend("top", c(black, blue, red, light_blue), col = c("black", "blue", "red", rainbow(1, start = 0.5, alpha = 0.5)), text.width = c(0.11, 0.13, 0.079, 0.09), pch = c(20, 
+    20, 20, NA), lty = c(NA, NA, NA, 1), lwd = 3, horiz = TRUE, bty = "n", title = "", x.intersp = c(0.2, 0.2, 0.2, 0.5), cex = 1.4)
 
 dev.off() 
